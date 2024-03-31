@@ -1,15 +1,52 @@
+const quoteContainer = document.querySelector("#quote-container");
+const quoteText = document.querySelector("#quote");
+const authorText = document.querySelector("#author");
+const twitterBtn = document.querySelector("#twitter");
+const newQuoteBtn = document.querySelector("#new-quote");
+
 let apiQuotes = [];
+
+function newQuote() {
+  // pick a random quote from apiQuotes array
+  const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
+  // check if the quote has author null or not
+  if (!quote.author) {
+    authorText.innerHTML = "Unknown";
+  } else if (quote.author.includes(", type.fit")) {
+    quote.author = quote.author.replace(", type.fit", "");
+    authorText.innerHTML = quote.author;
+  } else {
+    authorText.innerHTML = quote.author;
+  }
+  //check quote length to determine the styling
+  if (quote.text.length > 50) {
+    quoteText.classList.add("long-quote");
+  } else {
+    quoteText.classList.remove("long-quote");
+  }
+  quoteText.innerHTML = quote.text;
+}
 // Get Quotes From API
 async function getQuotes() {
   const apiUrl = "https://type.fit/api/quotes";
   try {
     const response = await fetch(apiUrl); //fetch(apiUrl) is a promise(promises object hota hai :) ...) which may be fulfilled so we have used await
     apiQuotes = await response.json(); //response.json() is a promise which may be fulfilled so we have used await
-    // console.log(apiQuotes[apiQuotes.length - 1]);
+    newQuote();
   } catch (error) {
     //catch Error here
   }
 }
+
+// Tweet quote
+function TweetQuote() {
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${quoteText.innerHTML} - ${authorText.innerHTML}`;
+  window.open(twitterUrl, "_blank");
+}
+
+newQuoteBtn.addEventListener("click", newQuote); // calling the function whenever the butoon is clicked
+twitterBtn.addEventListener("click", TweetQuote); //calling the function whenever the twitterBtn is clicked
+
 // on Load
 getQuotes();
 /*
