@@ -33,7 +33,7 @@ function newQuote() {
 }
 // Get Quotes From API
 async function getQuotes() {
-  const apiUrl = "https://type.fit/api/quotes";
+  const apiUrl = 'https://jacintodesign.github.io/quotes-api/data/quotes.json';
   try {
     const response = await fetch(apiUrl); //fetch(apiUrl) is a promise(promises object hota hai :) ...) which may be fulfilled so we have used await
     apiQuotes = await response.json(); //response.json() is a promise which may be fulfilled so we have used await
