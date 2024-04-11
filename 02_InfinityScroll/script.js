@@ -1,7 +1,7 @@
-// const imageContainer = document.querySelector(".image-container");
-// const loaader = document.querySelector("#loader");
+const imageContainer = document.querySelector(".image-container");
+const loaader = document.querySelector("#loader");
 
-const photosArray = [];
+let photosArray = [];
 let imgLoadCount = 0;
 let totalImages = 0;
 
@@ -50,12 +50,15 @@ function displayPhotos() {
 
 function imageload() {
   imgLoadCount++;
+}
+
+window.onscroll = function(){
   if (
-    window.innerHeight + window.scrollY >= document.body.offsetHeight &&
-    imgLoadCount === totalImages
-  ) {
-    getImages();
-  }
+    (( window.innerHeight + window.scrollY )>= document.body.offsetHeight) &&
+     imgLoadCount === totalImages
+   ) {
+     getImages();
+   }
 }
 
 // Get photos from Unsplash API
@@ -70,4 +73,4 @@ async function getImages() {
 }
 
 // on Load
-// getImages();
+getImages();
