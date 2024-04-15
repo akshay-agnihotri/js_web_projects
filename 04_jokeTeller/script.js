@@ -16,13 +16,6 @@ let joke;
 let setup;
 let punchline;
 
-// function for our Joke Teller Api
-async function fetchRandomJoke() {
-  response = await fetch(jokeApiUrl);
-  joke = await response.json();
-  jokeContent = joke.jokeContent;
-}
-
 // Function to remove emojis from a jokeContent to speak
 function removeEmojis(text) {
   return text
@@ -35,24 +28,36 @@ function removeEmojis(text) {
     .replace(/[\u{1F3FB}-\u{1F3FF}]/gu, "");
 }
 
-// Function to play the jokeContent
-function playJokeContent(){
-  // removing emojis if it exist in jokeContent
-  jokeContent = removeEmojis(jokeContent);
-
-  speech.text = jokeContent;
-  speech.lang = "hi-IN"; // Setting language to Hindi
-  window.speechSynthesis.speak(speech);
+// function for our Joke Teller Api
+async function fetchRandomJoke() {
+  try {
+    response = await fetch(jokeApiUrl);
+    joke = await response.json();
+    jokeContent = joke.jokeContent;
+    jokeContent = removeEmojis(jokeContent); // removing emojis if it exist in jokeContent
+  } catch (error) {
+    console.log(`whoops there is some problem ${error}`);
+  }
 }
 
-button.addEventListener("click", () => {
+// Function to play the jokeContent
+async function playJokeContent() {
+  try {
+    speech.text = jokeContent;
+    speech.lang = "hi-IN"; // Setting language to Hindi
+    window.speechSynthesis.cancel(); // Clear any pending utterances
+    await window.speechSynthesis.speak(speech);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+button.addEventListener("click", async () => {
   // fetching a random joke
-  fetchRandomJoke();
+  await fetchRandomJoke();
 
-  playJokeContent();
-
+  await playJokeContent();
 });
 
-
 // On Load
-fetchRandomJoke();
+// fetchRandomJoke();
